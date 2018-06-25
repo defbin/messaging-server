@@ -1,8 +1,9 @@
 _ = require 'lodash'
 url = require 'url'
 WebSocket = require 'ws'
+validate = require './validate'
 
-[clients, unsent, unread] = [{}, {}, {}]
+[clients, unsent, unread, store] = [{}, {}, {}, {}]
 
 wss = new WebSocket.Server
   port: 8080
@@ -26,10 +27,9 @@ wss.on 'connection', (ws, req) =>
   ws.on 'close', => delete clients[cid]
 
   ws.on 'message', (data) =>
-    try
-      { send, read } = JSON.parse data
-      return if not _.isArray(send) or not _.isArray(read)
+    try return if not validate payload = JSON.parse data
     catch error then return console.error error
+    { send, read } = payload
 
     # clean up
     _.each _.groupBy(_.filter(read, 'rid'), 'rid'), (messages, rid) =>

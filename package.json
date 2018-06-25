@@ -1,6 +1,6 @@
 {
   "name": "messaging-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Messaging server",
   "author": "Dmytro Zghoba <dmytro.zghoba@gmail.com>",
   "private": true,
@@ -8,6 +8,7 @@
     "start": "npx coffee server.coffee"
   },
   "dependencies": {
+    "ajv": "^6.5.1",
     "lodash": "^4.17.10",
     "ws": "^5.2.0"
   },

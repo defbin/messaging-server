@@ -27,7 +27,7 @@ Unknown sections are ignored.
 
 Messages must contain required fields. Other fields are just forwarded to the app.
 
-### Required fields
+### Required fields for sending message
 ```
 id :: string or number   # message id
 sid :: string or number  # sender id
@@ -50,9 +50,9 @@ Array of messages.
 		{ "id": 12, "rid": 32, "sid": 21, "url": "https://web.com/pic.png" }
 	],
 	"read": [
-		{ "id": 1, "sid": 21, "rid": 31 },
-		{ "id": 2, "sid": 21, "rid": 31 },
-		{ "id": 3, "sid": 22, "rid": 31 }
+		{ "id": 1 },
+		{ "id": 2 },
+		{ "id": 3 }
 	]
 }
 ```
