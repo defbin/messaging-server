@@ -1,9 +1,10 @@
 _ = require 'lodash'
+uniqid = require 'uniqid'
 url = require 'url'
 WebSocket = require 'ws'
 validate = require './validate'
 
-[clients, unsent, unread, store] = [{}, {}, {}, {}]
+[clients, unsent, unread] = [{}, {}, {}]
 
 wss = new WebSocket.Server
   port: 8080
@@ -29,14 +30,17 @@ wss.on 'connection', (ws, req) =>
   ws.on 'message', (data) =>
     try return if not validate payload = JSON.parse data
     catch error then return console.error error
-    { send, read } = payload
+
+    # generate unique id for each messages
+    _.each payload.send, (a) => _.set a, 'id', uniqid()
 
     # clean up
-    _.each _.groupBy(_.filter(read, 'rid'), 'rid'), (messages, rid) =>
+    _.each _.groupBy(_.pick(unread, _.map(payload.read, 'id')), 'rid'), (messages, rid) =>
       unread[rid] = _.omit unread[rid], _.map(messages, 'id')
       delete unread[rid] if _.isEmpty unread[rid]
+
     # send if online otherwise store
-    _.each _.groupBy(_.filter(send, 'rid'), 'rid'), (messages, rid) =>
+    _.each _.groupBy(payload.send, 'rid'), (messages, rid) =>
       unsent[rid] = _.assign {}, unsent[rid], _.keyBy messages, 'id'
       if ws = clients[rid]
         ws.send JSON.stringify({ messages: _.values send }), =>

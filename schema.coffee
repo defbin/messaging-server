@@ -10,7 +10,7 @@ module.exports = exports =
       type: 'array'
       items:
         type: 'object'
-        required: ['id', 'rid', 'sid']
+        required: ['id', 'rid']
         properties:
           id: ID
           rid: ID
